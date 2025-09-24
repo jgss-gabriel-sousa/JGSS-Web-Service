@@ -1,0 +1,36 @@
+function roughSizeOfObject(object) {
+    const objectList = [];
+    const stack = [object];
+    let bytes = 0;
+
+    while (stack.length) {
+        const value = stack.pop();
+
+        switch (typeof value) {
+            case "boolean":
+                bytes += 4;
+                break;
+
+            case "string":
+                bytes += value.length * 2;
+                break;
+
+            case "number":
+                bytes += 8;
+                break;
+                
+            case "object":
+                if (value && !objectList.includes(value)) {
+                    objectList.push(value);
+                    for (const prop in value) {
+                        stack.push(value[prop]);
+                    }
+                }
+                break;
+        }
+    }
+
+    return bytes;
+}
+
+module.exports = { roughSizeOfObject };
